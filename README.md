@@ -1,16 +1,3 @@
-##           _____  ____    _______          _       _           
-##     /\   |  __ \|  _ \  |__   __|        | |     | |          
-##    /  \  | |  | | |_) |    | | ___   ___ | |___  | |__  _   _ 
-##   / /\ \ | |  | |  _ <     | |/ _ \ / _ \| / __| | '_ \| | | |
-##  / ____ \| |__| | |_) |    | | (_) | (_) | \__ \ | |_) | |_| |
-## /_/    \_\_____/|____/     |_|\___/ \___/|_|___/ |_.__/ \__, |
-##                                                          __/ |
-##                                                         |___/ 
-##    _____                _   _    _                     _     
-##   / ____|              | | | |  | |                   | |    
-##  | (___  _   _  ___  __| | | |__| | __ _ ___  ___  ___| |__  
-##  \___ \| | | |/ _ \/ _` | |  __  |/ _` / __|/ _ \/ _ \ '_ \ 
-##  ____) | |_| |  __/ (_| | | |  | | (_| \__ \  __/  __/ |_) |
-## |_____/ \__, |\___|\__,_| |_|  |_|\__,_|___/\___|\___|_.__/ 
-##          __/ |                                              
-##         |___/                                               
+# Python ADB Utility
+
+A Python tool using ADB for Android device management. Features include USB and WiFi device connection, app management, device info, and a menu-driven interface. Install dependencies from `requirements.txt` and run `main.py` to start. Manage devices, apps, and more with simple commands.
