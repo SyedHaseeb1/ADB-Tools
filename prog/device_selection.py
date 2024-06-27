@@ -1,12 +1,13 @@
 import subprocess
 import sys
-from prog.utils import clear_screen, print_colored, center_text, display_table,print_main_heading
+from prog.utils import clear_screen, print_colored
 from prog.app_management import app_management
 from prog.device_info import get_device_info
 from prog.auto_connect_ip import auto_connect_device_via_wifi
-
-from prog.installed_apps import list_installed_apps  # Import the function to list installed apps
-from prog.menu import display_menu  # Import display_menu function
+from prog.clear_devices_list import clear_adb_devices
+from prog.start_tcp import start_tcp
+from prog.installed_apps import list_installed_apps
+from prog.menu import display_menu
 
 def list_connected_devices():
     result = subprocess.run(['adb', 'devices'], capture_output=True, text=True)
@@ -35,11 +36,13 @@ def display_main_menu(devices_usb):
     for idx, device in enumerate(devices_usb, start=1):
         print(f"{idx}. {device}")
     print("===============================")
-    print_colored("Add WiFi Device::", color="cyan", bold=True)
+    print_colored("Add WiFi Device:", color="cyan", bold=True)
     print("'ip' -> Add Device Using IP")
     print("'autoip' -> Search the network")
+    print("'tcp' -> Open TCP Port On Device")
     print("===============================")
-    print_colored("'exit' - Exit the program",color="red",bold=True)
+    print("'clear' -> Clear Devices List")
+    print_colored("'exit' - Exit the program", color="red", bold=True)
     print("===============================")
 
 def main_menu():
@@ -53,11 +56,33 @@ def main_menu():
                 ip_address = input("Enter the IP address of the device: ").strip()
                 connect_device_via_wifi(ip_address)
                 continue
-            
+
             if choice.lower() == 'autoip':
-            	 auto_connect_device_via_wifi()
-            	 continue
-               
+                auto_connect_device_via_wifi()
+                continue
+
+            if choice.lower() == 'tcp':
+                if devices_usb:
+                    print_colored("Select a device to open TCP port:", color="cyan")
+                    for idx, device in enumerate(devices_usb, start=1):
+                        print(f"{idx}. {device}")
+                    try:
+                        device_choice = int(input("Enter the number of the device: ").strip())
+                        if 1 <= device_choice <= len(devices_usb):
+                            selected_device = devices_usb[device_choice - 1]
+                            start_tcp(selected_device)
+                        else:
+                            print_colored("Invalid device selection.", color="red")
+                    except ValueError:
+                        print_colored("Invalid input. Please enter a number.", color="red")
+                else:
+                    print_colored("No USB-connected devices found.", color="red")
+                continue
+
+            if choice.lower() == 'clear':
+                clear_adb_devices()
+                continue
+
             elif choice.lower() == 'exit':
                 print_colored("Exiting program.", color="cyan")
                 sys.exit()
@@ -85,7 +110,7 @@ def main_menu():
                         elif action == '5':
                             print_colored("Back to Main Menu...", color="cyan")
                             main_menu()
-                            
+
                         elif action == '6':
                             print_colored("Exiting...", color="red")
                             sys.exit()
