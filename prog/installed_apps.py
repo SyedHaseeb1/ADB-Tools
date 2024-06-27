@@ -4,7 +4,7 @@ from prog.utils import clear_screen, print_colored
 
 def list_installed_apps(device_id):
     clear_screen()
-    print_colored(f"Installed Apps - Device: {device_id}", color="cyan", bold=True)
+    print_colored(f"Installed Apps - Device: {device_id}\n", color="cyan", bold=True)
     
     # Step 1: Get list of installed packages
     result = subprocess.run(['adb', '-s', device_id, 'shell', 'pm', 'list', 'packages'], capture_output=True, text=True)

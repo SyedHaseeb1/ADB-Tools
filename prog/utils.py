@@ -66,12 +66,25 @@ def print_header(text):
     print_colored(center_text(header), color="cyan", bold=True)
 
 def print_main_heading():
-    result = subprocess.run(['figlet', '-f', 'smslant', 'ADB Tools by\nSyed Haseeb'], capture_output=True, text=True)
-    if result.returncode == 0:
-        output = result.stdout
-        columns = shutil.get_terminal_size().columns
-        centered_output = "\n".join(line.center(columns) for line in output.split("\n"))
-        lolcat_process = subprocess.Popen(['lolcat'], stdin=subprocess.PIPE)
-        lolcat_process.communicate(input=centered_output.encode('utf-8'))
+    if shutil.which('figlet'):
+        result = subprocess.run(['figlet', '-f', 'smslant', 'ADB Tools by\nSyed Haseeb'], capture_output=True, text=True)
+        if result.returncode == 0:
+            output = result.stdout
+            columns = shutil.get_terminal_size().columns
+            centered_output = "\n".join(line.center(columns) for line in output.split("\n"))
+            if shutil.which('lolcat'):
+                lolcat_process = subprocess.Popen(['lolcat'], stdin=subprocess.PIPE)
+                lolcat_process.communicate(input=centered_output.encode('utf-8'))
+            else:
+                print_colored(centered_output, color="cyan", bold=True)
+        else:
+            print_colored("ADB Tools by Syed Haseeb", color="cyan", bold=True)
     else:
         print_colored("ADB Tools by Syed Haseeb", color="cyan", bold=True)
+
+# Example usage
+if __name__ == "__main__":
+    clear_screen()
+    print_header("Example Header")
+    table = [("IP Address", "MAC Address"), ("192.168.1.1", "00:1A:2B:3C:4D:5E")]
+    display_table(table)

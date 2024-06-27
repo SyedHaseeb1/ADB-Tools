@@ -109,10 +109,11 @@ def list_installed_apps_menu(device_id):
     list_installed_apps(device_id)
     input("\nPress Enter to continue...")
 
-def show_main_menu():
+def show_main_menu(device_id):
     f = Figlet(font='standard')
     clear_screen()
-    print_colored(f.renderText('App Management'), color='green', bold=True)
+    print_colored(f"Selected Device: {device_id}\n", color="green", bold=True)
+    print_colored("====== App Management ======", color="green", bold=True)
     print("1. List Installed Apps")
     print("2. Open App")
     print("3. Close App")
@@ -124,7 +125,7 @@ def show_main_menu():
 def app_management(device_id):
     while True:
         try:
-            show_main_menu()
+            show_main_menu(device_id)
 
             choice = input("Enter your choice (1-6): ").strip()
 
