@@ -1,0 +1,2 @@
+Discovered open port 5555/tcp on 172.16.30.134
+5555/tcp open  freeciv

@@ -3,6 +3,7 @@ import sys
 from prog.utils import clear_screen, print_colored, center_text, display_table,print_main_heading
 from prog.app_management import app_management
 from prog.device_info import get_device_info
+from prog.auto_connect_ip import auto_connect_device_via_wifi
 
 from prog.installed_apps import list_installed_apps  # Import the function to list installed apps
 from prog.menu import display_menu  # Import display_menu function
@@ -28,16 +29,17 @@ def connect_device_via_wifi(ip_address):
 
 def display_main_menu(devices_usb):
     clear_screen()
-    print_colored(("ADB Tool Main Menu"), color="cyan", bold=True)
+    print_colored("====== ADB Tool Main Menu ======", color="green", bold=True)
     print("===============================")
-    print("Connected Devices via USB:")
+    print_colored("Connected Devices via USB:", color="cyan", bold=True)
     for idx, device in enumerate(devices_usb, start=1):
         print(f"{idx}. {device}")
     print("===============================")
-    print("Add WiFi Device:")
+    print_colored("Add WiFi Device::", color="cyan", bold=True)
     print("'ip' -> Add Device Using IP")
+    print("'autoip' -> Search the network")
     print("===============================")
-    print("'exit' - Exit the program")
+    print_colored("'exit' - Exit the program",color="red",bold=True)
     print("===============================")
 
 def main_menu():
@@ -51,7 +53,11 @@ def main_menu():
                 ip_address = input("Enter the IP address of the device: ").strip()
                 connect_device_via_wifi(ip_address)
                 continue
-
+            
+            if choice.lower() == 'autoip':
+            	 auto_connect_device_via_wifi()
+            	 continue
+               
             elif choice.lower() == 'exit':
                 print_colored("Exiting program.", color="cyan")
                 sys.exit()
@@ -62,7 +68,7 @@ def main_menu():
                     selected_device = devices_usb[choice - 1]
                     while True:
                         display_menu(selected_device)
-                        action = input("Enter your choice (1-5): ")
+                        action = input("Enter your choice (1-6): ")
 
                         if action == '1':
                             list_installed_apps(selected_device)
@@ -77,9 +83,12 @@ def main_menu():
                             input("\nPress Enter to continue...")
 
                         elif action == '5':
-                            print_colored("Exiting...", color="cyan")
+                            print_colored("Back to Main Menu...", color="cyan")
+                            main_menu()
+                            
+                        elif action == '6':
+                            print_colored("Exiting...", color="red")
                             sys.exit()
-
                         else:
                             print_colored("Invalid choice. Please enter a number from 1 to 5.", color="red")
 

@@ -7,5 +7,6 @@ def display_menu(device_id):
     print("1. List Installed Apps")
     print("2. Device Info")
     print("3. Apps Management")  # New menu item
-    print("5. Quit")
+    print("5. Go to Main Menu")
+    print("6. Quit")
     print("============================\n")

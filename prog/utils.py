@@ -68,7 +68,10 @@ def print_header(text):
 def print_main_heading():
     result = subprocess.run(['figlet', '-f', 'smslant', 'ADB Tools by\nSyed Haseeb'], capture_output=True, text=True)
     if result.returncode == 0:
+        output = result.stdout
+        columns = shutil.get_terminal_size().columns
+        centered_output = "\n".join(line.center(columns) for line in output.split("\n"))
         lolcat_process = subprocess.Popen(['lolcat'], stdin=subprocess.PIPE)
-        lolcat_process.communicate(input=result.stdout.encode('utf-8'))
+        lolcat_process.communicate(input=centered_output.encode('utf-8'))
     else:
         print_colored("ADB Tools by Syed Haseeb", color="cyan", bold=True)
