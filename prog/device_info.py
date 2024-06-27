@@ -9,11 +9,13 @@ def get_device_info(device_id):
     # Retrieve device properties
     prop_commands = {
         'Model': 'ro.product.model',
+        'Device Name': 'ro.product.vendor.marketname',
+        'Manufacturer': 'ro.product.vendor.manufacturer',
         'Android Version': 'ro.build.version.release',
+        'Android SDK': 'ro.build.version.sdk',
         'CPU': 'ro.product.cpu.abi',
         'Codename': 'ro.build.version.codename',
         'Build ID': 'ro.build.id',
-        'Manufacturer': 'ro.product.brand',
         'Device': 'ro.product.device',
         'Product Name': 'ro.product.name',
         'Board': 'ro.product.board',
@@ -56,9 +58,17 @@ def get_device_info(device_id):
     for line in battery_result.stdout.strip().split('\n'):
         if 'level' in line:
             battery_level = line.split(':')[1].strip()
+    battery_volt=None
+    for line in battery_result.stdout.strip().split('\n'):
+        if 'voltage' in line:
+            battery_volt = line.split(':')[1].strip()
 
+    battery_temp=None
+    for line in battery_result.stdout.strip().split('\n'):
+        if 'temperature' in line:
+            battery_temp = int(line.split(':')[1].strip())/10
     # Get Battery information
-    charging_status = "Unknown"
+    charging_status = "Discharging"
     for line in battery_result.stdout.strip().split('\n'):
         if 'AC powered: true' in line:
             charging_status = 'Charging (AC)'
@@ -79,6 +89,7 @@ def get_device_info(device_id):
 
     # Extract IP address and other network details
     ip_regex = r'IP address (.+?)/'
+    ssid_regex = r'SSID: ([^,]+)'
     gateway_regex = r'Gateway (.+?) '
     dns_regex = r'DNS servers: \[ (.+?) \]'
 
@@ -93,6 +104,10 @@ def get_device_info(device_id):
     dns_match = re.search(dns_regex, network_result.stdout)
     if dns_match:
         dns_servers = dns_match.group(1).split()
+    network_name = None
+    ssid_match = re.search(ssid_regex, network_result.stdout)
+    if ssid_match:
+        network_name = ssid_match.group(1)
 
     # Convert KB to MB or GB as appropriate
     def convert_size(size_kb):
@@ -107,24 +122,34 @@ def get_device_info(device_id):
     table = [
         ["Device Info - Device:", device_id],
         ["Model", info_dict.get("Model", "")],
+        ["Device Name", info_dict.get("Device Name", "")],
+        ["Manufacturer", info_dict.get("Manufacturer", "")],
+
         ["Android Version", info_dict.get("Android Version", "")],
+        ["Android SDK", info_dict.get("Android SDK", "")],
         ["CPU", info_dict.get("CPU", "")],
         ["Codename", info_dict.get("Codename", "")],
         ["Build ID", info_dict.get("Build ID", "")],
-        ["Manufacturer", info_dict.get("Manufacturer", "")],
         ["Device", info_dict.get("Device", "")],
         ["Product Name", info_dict.get("Product Name", "")],
+        ["",""],
         ["Board", info_dict.get("Board", "")],
         ["Build Tags", info_dict.get("Build Tags", "")],
         ["Build Type", info_dict.get("Build Type", "")],
         ["Build User", info_dict.get("Build User", "")],
         ["Build Description", info_dict.get("Build Description", "")],
+        ["",""],
         ["Total RAM", convert_size(ram_total) if ram_total else ""],
-        ["Free RAM / Used RAM", f"({convert_size(ram_free)} / {convert_size(ram_total - ram_free)})" if ram_total and ram_free else ""],
+        ["Free RAM / Used RAM", f"({convert_size(ram_free*10)} / {convert_size(ram_total - ram_free)})" if ram_total and ram_free else ""],
         ["ROM (Internal Storage)", convert_size(rom_total) if rom_total else ""],
         ["Free ROM / Used ROM", f"({convert_size(rom_free)} / {convert_size(rom_total - rom_free)})" if rom_total and rom_free else ""],
+        ["",""],
         ["Battery Level", f"{battery_level}%" if battery_level else ""],
+        ["Battery Voltage", f"{battery_volt} mV" if battery_volt else ""],
+        ["Battery Temp", f"{battery_temp} C" if battery_temp else ""],
         ["Charging Status", charging_status if charging_status else ""],
+        ["",""],
+        ["Network Name", network_name if network_name else ""],
         ["IP Address", ip_address if ip_address else ""],
         ["Gateway", gateway if gateway else ""],
         ["DNS Servers", ", ".join(dns_servers) if dns_servers else ""]
