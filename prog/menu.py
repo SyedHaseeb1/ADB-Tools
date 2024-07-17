@@ -8,5 +8,6 @@ def display_menu(device_id):
     print("2. Device Info")
     print("3. Apps Management")  # New menu item
     print("5. Go to Main Menu")
-    print("6. Quit")
+    print("6. Open Device Screen")
+    print("7. Quit")
     print("============================\n")

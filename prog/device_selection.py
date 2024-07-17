@@ -8,6 +8,7 @@ from prog.clear_devices_list import clear_adb_devices
 from prog.start_tcp import start_tcp
 from prog.installed_apps import list_installed_apps
 from prog.menu import display_menu
+from prog.scrcpy import start_scrcpy
 
 def list_connected_devices():
     result = subprocess.run(['adb', 'devices'], capture_output=True, text=True)
@@ -110,8 +111,11 @@ def main_menu():
                         elif action == '5':
                             print_colored("Back to Main Menu...", color="cyan")
                             main_menu()
-
                         elif action == '6':
+                            start_scrcpy(selected_device)
+                            sys.exit()
+
+                        elif action == '7':
                             print_colored("Exiting...", color="red")
                             sys.exit()
                         else:
